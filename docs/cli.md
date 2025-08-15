@@ -61,7 +61,7 @@ This feature is integrated with [spacy-partial-tagger](https://github.com/doccan
 To use this feature, you need to install whisper as follows:
 
 ```bash
-pip install git+https://github.com/openai/whisper.git 
+pip install git+https://github.com/openai/whisper.git
 ```
 
 In this feature, you can annotate audio file with OpenAI [Whisper](https://github.com/openai/whisper). For a list of available models, please see the official repository.

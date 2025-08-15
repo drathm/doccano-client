@@ -24,7 +24,7 @@ class DataDownloadRepository:
         """
         resource = f"projects/{project_id}/download-format"
         response = self._client.get(resource)
-        options = [Option.parse_obj(label) for label in response.json()]
+        options = [Option.model_validate(label) for label in response.json()]
         return options
 
     def find_option_by_name(self, project_id: int, name: str) -> Option:

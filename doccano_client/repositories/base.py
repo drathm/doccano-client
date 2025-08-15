@@ -109,7 +109,9 @@ class BaseRepository:
         response = self._session.post(self.login_url, json={"username": username, "password": password})
         # TODO: do we want to do anything with the return value token in the future?
         verbose_raise_for_status(response)
-        self._session.headers.update({"X-CSRFToken": self._session.cookies.get("csrftoken")})
+        csrf = self._session.cookies.get("csrftoken")
+        if csrf is not None:
+            self._session.headers.update({"X-CSRFToken": csrf})
 
     def logout(self) -> None:
         """Logout of the session"""

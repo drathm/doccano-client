@@ -47,7 +47,7 @@ class LabelTypeRepository:
             LabelType: The found label type
         """
         response = self._client.get(f"projects/{project_id}/{self._resource_type}s/{label_type_id}")
-        return LabelType.parse_obj(response.json())
+        return LabelType.model_validate(response.json())
 
     def list(self, project_id: int) -> List[LabelType]:
         """Return all label types in which you are a member
@@ -59,7 +59,7 @@ class LabelTypeRepository:
             LabelType: The list of the label types.
         """
         response = self._client.get(f"projects/{project_id}/{self._resource_type}s")
-        label_types = [LabelType.parse_obj(label_type) for label_type in response.json()]
+        label_types = [LabelType.model_validate(label_type) for label_type in response.json()]
         return label_types
 
     def create(self, project_id: int, label_type: LabelType) -> LabelType:
@@ -73,9 +73,9 @@ class LabelTypeRepository:
             LabelType: The created label type
         """
         response = self._client.post(
-            f"projects/{project_id}/{self._resource_type}s", json=label_type.dict(exclude={"id"})
+            f"projects/{project_id}/{self._resource_type}s", json=label_type.model_dump(exclude={"id"})
         )
-        return LabelType.parse_obj(response.json())
+        return LabelType.model_validate(response.json())
 
     def update(self, project_id: int, label_type: LabelType) -> LabelType:
         """Update a label type
@@ -93,8 +93,8 @@ class LabelTypeRepository:
         if label_type.id is None:
             raise ValueError("label_type id must be set")
         resource = f"projects/{project_id}/{self._resource_type}s/{label_type.id}"
-        response = self._client.put(resource, json=label_type.dict())
-        return LabelType.parse_obj(response.json())
+        response = self._client.put(resource, json=label_type.model_dump())
+        return LabelType.model_validate(response.json())
 
     def delete(self, project_id: int, label_type: LabelType | int):
         """Delete a label type

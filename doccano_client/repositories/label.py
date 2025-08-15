@@ -38,7 +38,7 @@ class LabelRepository(Generic[T]):
         """
         resource = f"projects/{project_id}/examples/{example_id}/{self._resource_type}/{label_id}"
         response = self._client.get(resource)
-        return self._label_class.parse_obj(response.json())
+        return self._label_class.model_validate(response.json())
 
     def list(self, project_id: int, example_id: int) -> List[T]:
         """Return all label in which you are a member
@@ -52,7 +52,7 @@ class LabelRepository(Generic[T]):
         """
         resource = f"projects/{project_id}/examples/{example_id}/{self._resource_type}"
         response = self._client.get(resource)
-        labels = [self._label_class.parse_obj(label) for label in response.json()]
+        labels = [self._label_class.model_validate(label) for label in response.json()]
         return labels
 
     def create(self, project_id: int, label: T) -> T:
@@ -66,8 +66,8 @@ class LabelRepository(Generic[T]):
             T: The created label
         """
         resource = f"projects/{project_id}/examples/{label.example}/{self._resource_type}"
-        response = self._client.post(resource, json=label.dict(exclude={"id"}))
-        return self._label_class.parse_obj(response.json())
+        response = self._client.post(resource, json=label.model_dump(exclude={"id"}))
+        return self._label_class.model_validate(response.json())
 
     def update(self, project_id: int, label: T) -> T:
         """Update a label
@@ -85,8 +85,8 @@ class LabelRepository(Generic[T]):
         if label.id is None:
             raise ValueError("Label id is required")
         resource = f"projects/{project_id}/examples/{label.example}/{self._resource_type}/{label.id}"
-        response = self._client.put(resource, json=label.dict())
-        return self._label_class.parse_obj(response.json())
+        response = self._client.put(resource, json=label.model_dump())
+        return self._label_class.model_validate(response.json())
 
     def delete(self, project_id: int, label: T):
         """Delete a label

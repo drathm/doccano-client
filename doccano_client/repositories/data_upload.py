@@ -26,7 +26,7 @@ class DataUploadRepository:
         """
         resource = f"projects/{project_id}/catalog"
         response = self._client.get(resource)
-        options = [Option.parse_obj(label) for label in response.json()]
+        options = [Option.model_validate(label) for label in response.json()]
         return options
 
     def upload(self, file_path: str) -> str:

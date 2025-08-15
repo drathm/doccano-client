@@ -28,7 +28,7 @@ class Examples:
     def save(self, project_dir: pathlib.Path):
         path = project_dir / self.filename
         with path.open("w") as f:
-            examples = [example.dict() for example in self.items.values()]
+            examples = [example.model_dump() for example in self.items.values()]
             json.dump(examples, f)
 
     @classmethod
@@ -37,7 +37,7 @@ class Examples:
         if not path.exists():
             return cls()
         with path.open() as f:
-            items = [Example.parse_obj(example) for example in json.load(f)]
+            items = [Example.model_validate(example) for example in json.load(f)]
         examples = cls(items)
         return examples
 
@@ -79,7 +79,7 @@ class Spans:
     def save(self, project_dir: pathlib.Path):
         path = project_dir / self.filename
         with path.open("w") as f:
-            spans = {example_id: [span.dict() for span in spans] for example_id, spans in self.items.items()}
+            spans = {example_id: [span.model_dump() for span in spans] for example_id, spans in self.items.items()}
             json.dump(spans, f)
 
     @classmethod
@@ -89,7 +89,7 @@ class Spans:
             return cls()
         with path.open() as f:
             items = json.load(f)
-        items = {int(example_id): [Span.parse_obj(span) for span in spans] for example_id, spans in items.items()}
+        items = {int(example_id): [Span.model_validate(span) for span in spans] for example_id, spans in items.items()}
         spans = cls(items)
         return spans
 

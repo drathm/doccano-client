@@ -1,9 +1,7 @@
 import random
-import re
-from typing import Literal, Optional
+from typing import Annotated, Literal, Optional
 
-from pydantic import BaseModel, Field, root_validator
-from pydantic.types import ConstrainedStr
+from pydantic import BaseModel, Field, StringConstraints, model_validator
 
 PREFIX_KEY = Literal["ctrl", "shift", "ctrl shift"]
 SUFFIX_KEY = Literal[
@@ -50,31 +48,23 @@ def generate_random_hex_color():
     return f"#{random.randint(0, 0xFFFFFF):06x}"
 
 
-class Text(ConstrainedStr):
-    min_length = 1
-    max_length = 100
-    strip_whitespace = True
-
-
-class Color(ConstrainedStr):
-    regex = re.compile(r"#[a-fA-F0-9]{6}")
+TextType = Annotated[str, StringConstraints(min_length=1, max_length=100, strip_whitespace=True)]
+ColorType = Annotated[str, StringConstraints(pattern=r"#[a-fA-F0-9]{6}")]
 
 
 class LabelType(BaseModel):
     id: Optional[int]
-    text: Text
+    text: TextType
     prefix_key: Optional[PREFIX_KEY] = None
     suffix_key: Optional[SUFFIX_KEY] = None
-    background_color: Color = Field(default_factory=generate_random_hex_color)
-    text_color: Color = Field(default="#ffffff")
+    background_color: ColorType = Field(default_factory=generate_random_hex_color)
+    text_color: ColorType = Field(default="#ffffff")
 
-    @root_validator
-    def deny_only_prefix_key(cls, values):
-        prefix_key = values.get("prefix_key")
-        suffix_key = values.get("suffix_key")
-        if prefix_key and suffix_key is None:
+    @model_validator(mode="after")
+    def deny_only_prefix_key(self):
+        if self.prefix_key and self.suffix_key is None:
             raise ValueError("You must specify a suffix_key if you specify a prefix_key.")
-        return values
+        return self
 
     @classmethod
     def create(

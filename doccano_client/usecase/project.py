@@ -128,12 +128,14 @@ class ProjectUseCase:
             guideline=guideline if guideline is not None else project.guideline,
             project_type=project_type or project.project_type,
             random_order=random_order if random_order is not None else project.random_order,
-            collaborative_annotation=collaborative_annotation
-            if collaborative_annotation is not None
-            else project.collaborative_annotation,
-            single_class_classification=single_class_classification
-            if single_class_classification is not None
-            else project.single_class_classification,
+            collaborative_annotation=(
+                collaborative_annotation if collaborative_annotation is not None else project.collaborative_annotation
+            ),
+            single_class_classification=(
+                single_class_classification
+                if single_class_classification is not None
+                else project.single_class_classification
+            ),
             allow_overlapping=allow_overlapping if allow_overlapping is not None else project.allow_overlapping,
             grapheme_mode=grapheme_mode if grapheme_mode is not None else project.grapheme_mode,
             use_relation=use_relation if use_relation is not None else project.use_relation,
