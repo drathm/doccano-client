@@ -33,7 +33,7 @@ class ProjectRepository:
         Returns:
             Dict[str, Any]: The converted project
         """
-        project_dict = project.model_dump()
+        project_dict = project.dict()
         project_dict["tags"] = [{"text": tag} for tag in project_dict["tags"]]
         return project_dict
 
