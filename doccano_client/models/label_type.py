@@ -53,7 +53,7 @@ ColorType = Annotated[str, StringConstraints(pattern=r"#[a-fA-F0-9]{6}")]
 
 
 class LabelType(BaseModel):
-    id: Optional[int]
+    id: Optional[int] = None
     text: TextType
     prefix_key: Optional[PREFIX_KEY] = None
     suffix_key: Optional[SUFFIX_KEY] = None

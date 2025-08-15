@@ -11,11 +11,11 @@ from pydantic import (
 
 
 class Label(BaseModel):
-    id: Optional[int]
+    id: Optional[int] = None
     example: int
     prob: float = 0.0
     manual: bool = False
-    user: Optional[int]
+    user: Optional[int] = None
 
 
 class Category(Label):

@@ -28,7 +28,7 @@ DescriptionType = Annotated[str, StringConstraints(min_length=1, strip_whitespac
 
 
 class Project(BaseModel):
-    id: Optional[int]
+    id: Optional[int] = None
     name: NameType
     description: DescriptionType
     guideline: str = "Please write annotation guideline."
